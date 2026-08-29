@@ -1,0 +1,8 @@
+target/
+.idea/
+.claude/
+.mcp.json
+*.iml
+*.class
+.vscode/
+.DS_Store
