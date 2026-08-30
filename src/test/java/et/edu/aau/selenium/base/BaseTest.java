@@ -32,8 +32,9 @@ public abstract class BaseTest {
 
         driver = new ChromeDriver(options);
 
-        // one shared wait object, 10s ceiling, used by every Page Object
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        // one shared wait object, 15s ceiling, used by every Page Object
+        // (the public demo backend occasionally lags on the add-to-cart round trip)
+        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
     }
 
     @AfterEach

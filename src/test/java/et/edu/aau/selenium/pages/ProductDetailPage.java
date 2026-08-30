@@ -40,7 +40,9 @@ public class ProductDetailPage {
     /** T5: the explicit wait. Waits for the cart badge to actually change before returning. */
     public ProductDetailPage addToCart() {
         int before = cartCount();
-        driver.findElement(addToCartBtn).click();
+        // wait for the button to be clickable rather than just present - Angular can render
+        // the markup slightly before its click handler is attached (hydration lag)
+        wait.until(ExpectedConditions.elementToBeClickable(addToCartBtn)).click();
         wait.until(d -> cartCount() > before);
         return this;
     }
