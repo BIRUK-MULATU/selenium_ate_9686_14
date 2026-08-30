@@ -58,5 +58,3 @@ mvn test -Dheadless=false
 - `problem_user`: every product shows the same placeholder image regardless of the actual item.
 - `problem_user`: "Add to cart" doesn't update the button label or cart badge.
 - `performance_glitch_user`: noticeably slow transition from login to the inventory page.
-
-See `selenium_ate_9686_14.pdf` for the full report, test case table, and design technique used for the data-driven test.
