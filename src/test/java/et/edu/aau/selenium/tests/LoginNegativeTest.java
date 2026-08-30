@@ -7,30 +7,30 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DisplayName("T4 - Negative path")
+@DisplayName("T4 - Negative path: login")
 class LoginNegativeTest extends BaseTest {
 
     @Test
     @DisplayName("Wrong password is rejected with an error and no navigation")
     void wrongPasswordShowsError() {
         LoginPage login = new LoginPage(driver, wait)
-                              .open()
-                              .loginExpectingFailure("standard_user", "definitely_wrong");
+                               .open()
+                               .loginExpectingFailure("customer@practicesoftwaretesting.com", "definitely_wrong");
 
-        assertTrue(login.errorText().contains("do not match"),
-                   "Error should say the credentials do not match. Actual: " + login.errorText());
-        assertFalse(driver.getCurrentUrl().contains("inventory.html"),
-                    "A failed login must not navigate to the inventory page");
+        assertEquals("Invalid email or password", login.errorText("login"));
+        assertFalse(driver.getCurrentUrl().contains("/account"),
+                    "A failed login must not navigate to the account page");
     }
 
     @Test
-    @DisplayName("A locked-out account is blocked with its own message")
-    void lockedOutUserIsBlocked() {
+    @DisplayName("Submitting the form empty is blocked by required-field validation")
+    void emptyFieldsBlockSubmission() {
         LoginPage login = new LoginPage(driver, wait)
-                              .open()
-                              .loginExpectingFailure("locked_out_user", "secret_sauce");
+                               .open()
+                               .loginExpectingFailure("", "");
 
-        assertTrue(login.errorText().toLowerCase().contains("locked out"),
-                   "Error should mention the account is locked out. Actual: " + login.errorText());
+        assertEquals("Email is required", login.errorText("email"));
+        assertEquals("Password is required", login.errorText("password"));
+        assertFalse(driver.getCurrentUrl().contains("/account"));
     }
 }

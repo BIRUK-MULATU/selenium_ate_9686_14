@@ -14,9 +14,8 @@ public class CartPage {
     private final WebDriver driver;
     private final WebDriverWait wait;
 
-    private final By cartList  = By.cssSelector(".cart_list");
-    private final By cartItems = By.cssSelector(".cart_item");
-    private final By itemNames = By.cssSelector(".inventory_item_name");
+    private final By productTitles = By.cssSelector("[data-test='product-title']");
+    private final By cartTotal     = By.cssSelector("[data-test='cart-total']");
 
     public CartPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
@@ -24,17 +23,27 @@ public class CartPage {
     }
 
     public CartPage waitUntilLoaded() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(cartList));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(productTitles));
         return this;
     }
 
     public int itemCount() {
-        return driver.findElements(cartItems).size();
+        return driver.findElements(productTitles).size();
     }
 
-    public List<String> itemNames() {
-        return driver.findElements(itemNames).stream()
-                     .map(WebElement::getText)
+    /**
+     * The site leaves a trailing whitespace text node before an Angular comment marker
+     * inside this element, which ChromeDriver's getText() doesn't always trim here
+     * (unlike the equivalent element on the catalogue page) - so trim defensively.
+     */
+    public List<String> productTitles() {
+        return driver.findElements(productTitles).stream()
+                     .map(e -> e.getText().trim())
                      .collect(Collectors.toList());
+    }
+
+    public double totalAmount() {
+        String text = driver.findElement(cartTotal).getText().replace("$", "").trim();
+        return Double.parseDouble(text);
     }
 }
